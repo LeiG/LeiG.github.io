@@ -1,0 +1,967 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="google-site-verification" content="Zqibe9a-H3xmpUfZofRbofarANkAKbRjIs07iLIVslw" />
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="scala,play framework,s3,machine learning,spark," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Commit Logs" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="We had talked about various ways to serve machine learning results in production (see an ealier post Predictive Model Deployment with Spark for example). That article outlines three architectures of m">
+<meta name="keywords" content="scala,play framework,s3,machine learning,spark">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Serve Spark ML Models Using Play Framework and S3">
+<meta property="og:url" content="https://www.commitlogs.com/2017/02/18/serve-spark-ml-model-using-play-framework-and-s3/index.html">
+<meta property="og:site_name" content="Commit Logs">
+<meta property="og:description" content="We had talked about various ways to serve machine learning results in production (see an ealier post Predictive Model Deployment with Spark for example). That article outlines three architectures of m">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2017-02-23T05:47:43.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Serve Spark ML Models Using Play Framework and S3">
+<meta name="twitter:description" content="We had talked about various ways to serve machine learning results in production (see an ealier post Predictive Model Deployment with Spark for example). That article outlines three architectures of m">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 'undefined',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://www.commitlogs.com/2017/02/18/serve-spark-ml-model-using-play-framework-and-s3/"/>
+
+
+
+
+
+<link rel="canonical" href=" { { site.url } }{ { page.url } }" />
+<script type="text/javascript">
+    var host = "commitlogs.com";
+    if ((host == window.location.host) && (window.location.protocol != "https:"))
+        window.location.protocol = "https";
+</script>
+
+
+<meta content='@_LeiG' name='twitter:site'/>
+<meta content='@_LeiG' name='twitter:creator'/>
+<meta property="og:image" content="/favicon.ico" />
+
+
+  <title> Serve Spark ML Models Using Play Framework and S3 | Commit Logs </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-83286843-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Commit Logs</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <h1 class="site-subtitle" itemprop="description">Lei Gong</h1>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/About" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://www.commitlogs.com/2017/02/18/serve-spark-ml-model-using-play-framework-and-s3/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Lei Gong">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/favicon.ico">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Commit Logs">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Commit Logs" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                Serve Spark ML Models Using Play Framework and S3
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-18T17:49:34-08:00">
+                2017-02-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/02/18/serve-spark-ml-model-using-play-framework-and-s3/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/02/18/serve-spark-ml-model-using-play-framework-and-s3/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>We had talked about various ways to serve machine learning results in production (see an ealier post <a href="https://commitlogs.com/2016/11/19/predictive-model-deployment-with-spark/" target="_blank" rel="noopener">Predictive Model Deployment with Spark</a> for example). That article outlines three architectures of model serving systems. In particular, I found using Spark’s internal serialization logic to persist/load models to be both flexible and reliable. As a follow-up, in this post, I am going to show case how to serve a simple Spark MLLib machine learning model, i.e. Naive Bayes classifier as an example, in a web application built with the Play Framework, which is one of the most popular web frameworks in Scala/Java.</p>
+<h2 id="Offline-model-training"><a href="#Offline-model-training" class="headerlink" title="Offline model training"></a>Offline model training</h2><p>Today machine learning models are often trained on a large Spark cluster to take advantage of its powerful distributed computing capability and easy-to-use APIs. Since the offline training part is not the focus of this post, I will just build on top of a toy training pipeline from the official <a href="https://spark.apache.org/docs/2.0.2/mllib-naive-bayes.html" target="_blank" rel="noopener">Spark tutorial</a></p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.apache.spark.mllib.classification.&#123;<span class="type">NaiveBayes</span>, <span class="type">NaiveBayesModel</span>&#125;</span><br><span class="line"><span class="keyword">import</span> org.apache.spark.mllib.util.<span class="type">MLUtils</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Load and parse the data file.</span></span><br><span class="line"><span class="keyword">val</span> data = <span class="type">MLUtils</span>.loadLibSVMFile(sc, <span class="string">"data/mllib/sample_libsvm_data.txt"</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// Split data into training (60%) and test (40%).</span></span><br><span class="line"><span class="keyword">val</span> <span class="type">Array</span>(training, test) = data.randomSplit(<span class="type">Array</span>(<span class="number">0.6</span>, <span class="number">0.4</span>))</span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> model = <span class="type">NaiveBayes</span>.train(training, lambda = <span class="number">1.0</span>, modelType = <span class="string">"multinomial"</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> predictionAndLabel = test.map(p =&gt; (model.predict(p.features), p.label))</span><br><span class="line"><span class="keyword">val</span> accuracy = <span class="number">1.0</span> * predictionAndLabel.filter(x =&gt; x._1 == x._2).count() / test.count()</span><br></pre></td></tr></table></figure>
+<h3 id="S3-storage"><a href="#S3-storage" class="headerlink" title="S3 storage"></a>S3 storage</h3><p>There are a few model storage options and I decide to use S3 for its simplicity and avaliability. Moreover, Spark provides nice support to save serialized model directly to S3. All you need to do is to configure your <code>SparkContext</code> with the right S3 credentials and then add the following lines to the previous code snippet.</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sc.hadoopConfiguration.set(<span class="string">"fs.s3a.access.key"</span>, <span class="type">YourAWSAccessKeyId</span>)</span><br><span class="line">sc.hadoopConfiguration.set(<span class="string">"fs.s3a.secret.key"</span>, <span class="type">YourAWSSecretKey</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// replace it with your bucket path</span></span><br><span class="line">model.save(sc, <span class="string">"s3a://persisted-models/naivebayesexample"</span>)</span><br></pre></td></tr></table></figure>
+<p>If you go to your AWS console, you could find <code>.parquet</code> files stored under your S3 bucket <code>persisted-models/naivebayesexample</code>, which represent the model internal serialization logic of Spark.</p>
+<p>Note that I am using the <code>s3a</code> URI schema to interact with S3. There are in total three variants as described in <a href="https://wiki.apache.org/hadoop/AmazonS3" target="_blank" rel="noopener">https://wiki.apache.org/hadoop/AmazonS3</a></p>
+<blockquote>
+<p>S3 Native FileSystem (URI scheme: s3n) A native filesystem for reading and writing regular files on S3. The advantage of this filesystem is that you can access files on S3 that were written with other tools. Conversely, other tools can access files written using Hadoop. The disadvantage is the 5GB limit on file size imposed by S3.</p>
+<p>S3A (URI scheme: s3a) A successor to the S3 Native, s3n fs, the S3a: system uses Amazon’s libraries to interact with S3. This allows S3a to support larger files (no more 5GB limit), higher performance operations and more. The filesystem is intended to be a replacement for/successor to S3 Native: all objects accessible from s3n:// URLs should also be accessible from s3a simply by replacing the URL schema.</p>
+<p>S3 Block FileSystem (URI scheme: s3) A block-based filesystem backed by S3. Files are stored as blocks, just like they are in HDFS. This permits efficient implementation of renames. This filesystem requires you to dedicate a bucket for the filesystem - you should not use an existing bucket containing files, or write other files to the same bucket. The files stored by this filesystem can be larger than 5GB, but they are not interoperable with other S3 tools.</p>
+</blockquote>
+<p>I choose to use S3A is because 1) it is an object-based overlay on top of S3, unlike S3 Block FileSystem, and 2) it has better performance and suports object up to 5TB compared to S3 Native FileSystem with 5GB object size limit.</p>
+<h2 id="Online-model-serving"><a href="#Online-model-serving" class="headerlink" title="Online model serving"></a>Online model serving</h2><p>Now let’s come to the online serving part. To save some time, I am assuming you already have a Play application up and running (I may write a follow-up post to explain how to set up a minimal web application using the Play Framework, which should be fairly straightforward). For now, let’s also assume the project name of the Play application is <code>yoda</code> and its skeleton looks like the following.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">yoda/</span><br><span class="line">  app/</span><br><span class="line">    controllers/</span><br><span class="line">      Application.scala</span><br><span class="line">    views/</span><br><span class="line">      index.scala.html</span><br><span class="line">      main.scala.html</span><br><span class="line">  conf/</span><br><span class="line">    application.conf</span><br><span class="line">    routes</span><br><span class="line">  public/</span><br><span class="line">  build.sbt</span><br></pre></td></tr></table></figure>
+<h3 id="Add-dependencies"><a href="#Add-dependencies" class="headerlink" title="Add dependencies"></a>Add dependencies</h3><p>The trained model is saved on S3 already at this moment, what we want is to load up the model in memory for <code>yoda</code>. To achieve this, additional dependencies need to be added to the web application. Specifically, we need to add </p>
+<ul>
+<li><code>guava</code>: dependency injection and cache</li>
+<li><code>hadoop</code>: read files from AWS S3</li>
+<li><code>spark</code>: deserialize parquet files to Spark ML model and make predictions</li>
+</ul>
+<p>You can add these dependencies in the <code>build.sbt</code> file by adding the following lines.</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">libraryDependencies ++= <span class="type">Seq</span>(</span><br><span class="line">  jdbc,</span><br><span class="line">  anorm,</span><br><span class="line">  cache,</span><br><span class="line">  <span class="string">"com.google.guava"</span>  %% <span class="string">"guava"</span>                   % <span class="string">"19.0"</span>,</span><br><span class="line">  <span class="string">"org.apache.spark"</span>  %% <span class="string">"spark-core"</span>              % <span class="string">"2.0.0"</span>,</span><br><span class="line">  <span class="string">"org.apache.spark"</span>  %% <span class="string">"spark-hive"</span> 	           % <span class="string">"2.0.0"</span>,</span><br><span class="line">  <span class="string">"org.apache.spark"</span>  %% <span class="string">"spark-sql"</span>               % <span class="string">"2.0.0"</span>,</span><br><span class="line">  <span class="string">"org.apache.spark"</span>  %% <span class="string">"spark-mllib"</span>             % <span class="string">"2.0.0"</span>,</span><br><span class="line">  <span class="string">"org.apache.hadoop"</span> %% <span class="string">"hadoop-aws"</span>              % <span class="string">"2.7.3"</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<h3 id="Load-model-from-S3"><a href="#Load-model-from-S3" class="headerlink" title="Load model from S3"></a>Load model from S3</h3><p>With these dependencies, we can now load trained model from S3 to memory. Note that we can use some cache mechanism to keep the model in memory for prediction and refresh it if the model is updated. For similicity, we are going to keep the model in memory and refresh every 24 hours in this toy example. More complex caching logic should be use case specific.</p>
+<p>The logic can be added to <code>CacheProvider.scala</code> under <code>controllers/</code>, i.e.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">controllers/</span><br><span class="line">  Application.scala</span><br><span class="line">  CacheProvider.scala</span><br></pre></td></tr></table></figure>
+<p>such that</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> controllers</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.<span class="type">TimeUnit</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.google.common.cache.&#123;<span class="type">CacheBuilder</span>, <span class="type">CacheLoader</span>&#125;</span><br><span class="line"><span class="keyword">import</span> org.apache.spark.&#123;<span class="type">SparkConf</span>, <span class="type">SparkContext</span>&#125;</span><br><span class="line"><span class="keyword">import</span> org.apache.spark.mllib.classification.<span class="type">NaiveBayesModel</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">trait</span> <span class="title">CacheProvider</span> </span>&#123;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">val</span> conf = <span class="keyword">new</span> <span class="type">SparkConf</span>().setMaster(<span class="string">"local"</span>).setAppName(<span class="string">"yoda"</span>)</span><br><span class="line">      .set(<span class="string">"spark.driver.host"</span>, <span class="string">"localhost"</span>)</span><br><span class="line">      .set(<span class="string">"spark.driver.allowMultipleContexts"</span>, <span class="string">"true"</span>)</span><br><span class="line">  <span class="keyword">val</span> sc = <span class="keyword">new</span> <span class="type">SparkContext</span>(conf)</span><br><span class="line"></span><br><span class="line">  sc.hadoopConfiguration.set(<span class="string">"fs.s3n.awsAccessKeyId"</span>, <span class="type">YourAWSAccessKeyId</span>)</span><br><span class="line">  sc.hadoopConfiguration.set(<span class="string">"fs.s3n.awsSecretAccessKey"</span>, <span class="type">YourAWSSecretKey</span>)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">val</span> naiveBayesModelCache = <span class="type">CacheBuilder</span>.newBuilder()</span><br><span class="line">    .maximumSize(<span class="number">2</span>)</span><br><span class="line">    .refreshAfterWrite(<span class="number">24</span>, <span class="type">TimeUnit</span>.<span class="type">HOURS</span>)</span><br><span class="line">    .build(</span><br><span class="line">      <span class="keyword">new</span> <span class="type">CacheLoader</span>[<span class="type">String</span>, <span class="type">NaiveBayesModel</span>]&#123;</span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">load</span></span>(path: <span class="type">String</span>): <span class="type">NaiveBayesModel</span> = &#123;</span><br><span class="line">          <span class="type">NaiveBayesModel</span>.load(sc, path)</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">getNaiveBayesModel</span></span>: <span class="type">NaiveBayesModel</span> = &#123;</span><br><span class="line">    naiveBayesModelCache.get(<span class="string">"s3n://persisted-models/naivebayesexample"</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Essentially, the web application <code>yoda</code> runs a Spark in local mode and use its built-in functionality to load the saved model from S3. This approach is pretty generic in the sense that all types of models <code>.save</code> to S3 can be loaded in memory by a web application with minimal code changes.</p>
+<h3 id="Make-online-prediction"><a href="#Make-online-prediction" class="headerlink" title="Make online prediction"></a>Make online prediction</h3><p>Once the Spark ML model is loaded in memory, making prediction based on incoming request is straightforward. Most Spark ML models have a built-in <code>.predict</code> method that takes in an array of features and returns a prediction score.</p>
+<p>You can add the following lines to your <code>Application.scala</code> to make predictions on randomly generated features.</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> controllers</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> play.api._</span><br><span class="line"><span class="keyword">import</span> play.api.mvc._</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> scala.concurrent.<span class="type">Future</span></span><br><span class="line"><span class="keyword">import</span> scala.concurrent.<span class="type">ExecutionContext</span>.<span class="type">Implicits</span>._</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">object</span> <span class="title">Application</span> <span class="keyword">extends</span> <span class="title">Controller</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">index</span> </span>= <span class="type">Action</span>.async &#123;</span><br><span class="line">      <span class="keyword">val</span> f: <span class="type">Future</span>[<span class="type">Double</span>] = <span class="type">Future</span> &#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// random generate inputs</span></span><br><span class="line">        <span class="keyword">val</span> testInput = <span class="type">Vectors</span>.dense(<span class="type">Array</span>.fill(<span class="number">692</span>)(<span class="type">Random</span>.nextInt).map(_.toDouble))</span><br><span class="line"></span><br><span class="line">        <span class="type">CacheProvider</span>.getNaiveBayesModel.predict(testInput)</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      f.map &#123; i =&gt; <span class="type">Ok</span>(views.html.index(i.toString)) &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h2><p>Building machine learning models are fun and challenging, but, at the end of the day, we want to serve them to our users. This often means expose some endpoints in a web service. The described method in this post aims to provide a generic way to serve all kinds of machine learning models to improve the experience of our users. </p>
+<p>As always, I would really appreciate your thoughts/comments. Feel free to leave them following this post or tweet me @_LeiG.</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/scala/" rel="tag"># scala</a>
+          
+            <a href="/tags/play-framework/" rel="tag"># play framework</a>
+          
+            <a href="/tags/s3/" rel="tag"># s3</a>
+          
+            <a href="/tags/machine-learning/" rel="tag"># machine learning</a>
+          
+            <a href="/tags/spark/" rel="tag"># spark</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/01/28/how-to-set-up-gulp-for-front-end-development/" rel="next" title="How To Set up a Gulp Script for Faster Front-end Development">
+                <i class="fa fa-chevron-left"></i> How To Set up a Gulp Script for Faster Front-end Development
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/03/11/caching-predictive-models-using-guava-in-scala/" rel="prev" title="Caching predictive models using Guava in Scala">
+                Caching predictive models using Guava in Scala <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- Go to www.addthis.com/dashboard to customize your tools -->
+<div class="addthis_inline_share_toolbox">
+  <script type = "text/javascript" src = "//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-57cc6969fe948040" async = "async" ></script>
+</div>
+
+      
+    </div>
+
+    <!-- Begin MailChimp Signup Form -->
+<link href="//cdn-images.mailchimp.com/embedcode/slim-10_7.css" rel="stylesheet" type="text/css">
+<style type="text/css">
+  #mc_embed_signup{background:#fff; clear:left; font-size:13px; font-style:sans-serif; }
+  #mc_embed_signup #mce-EMAIL{width: 100%; font-size:13px;}
+  #mc_embed_signup #mc-embedded-subscribe{float: right; font-size:13px; width: 80px;}
+  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+  We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+</style>
+<div id="mc_embed_signup">
+  <form action="//commitlogs.us14.list-manage.com/subscribe/post?u=6313029766166dc051a2e8268&amp;id=681c5b979d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+    <div id="mc_embed_signup_scroll">
+      <label style="color: #666666; font-size: 13px;">JOIN A COMMUNITY FOR MAKERS.</label>
+      <input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="Enter your email..." required>
+      <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+      <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_6313029766166dc051a2e8268_681c5b979d" tabindex="-1" value=""></div>
+      <div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+    </div>
+  </form>
+ </div>
+ <!--End mc_embed_signup-->
+
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/favicon.ico"
+               alt="Lei Gong" />
+          <p class="site-author-name" itemprop="name">Lei Gong</p>
+          <p class="site-description motion-element" itemprop="description">It is not just about software development and craftsmanship.</p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">26</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">78</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/_LeiG" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.github.com/LeiG" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.linkedin.com/in/imleigong" target="_blank" title="LinkedIn">
+                  
+                    <i class="fa fa-fw fa-linkedin"></i>
+                  
+                  LinkedIn
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:lei@commitlogs.com" target="_blank" title="Contact">
+                  
+                    <i class="fa fa-fw fa-envelope"></i>
+                  
+                  Contact
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Offline-model-training"><span class="nav-number">1.</span> <span class="nav-text"><a href="#Offline-model-training" class="headerlink" title="Offline model training"></a>Offline model training</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#S3-storage"><span class="nav-number">1.1.</span> <span class="nav-text"><a href="#S3-storage" class="headerlink" title="S3 storage"></a>S3 storage</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Online-model-serving"><span class="nav-number">2.</span> <span class="nav-text"><a href="#Online-model-serving" class="headerlink" title="Online model serving"></a>Online model serving</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Add-dependencies"><span class="nav-number">2.1.</span> <span class="nav-text"><a href="#Add-dependencies" class="headerlink" title="Add dependencies"></a>Add dependencies</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Load-model-from-S3"><span class="nav-number">2.2.</span> <span class="nav-text"><a href="#Load-model-from-S3" class="headerlink" title="Load model from S3"></a>Load model from S3</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Make-online-prediction"><span class="nav-number">2.3.</span> <span class="nav-text"><a href="#Make-online-prediction" class="headerlink" title="Make online prediction"></a>Make online prediction</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Summary"><span class="nav-number">3.</span> <span class="nav-text"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lei Gong</span>
+</div>
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'lei-gong';
+      var disqus_identifier = '2017/02/18/serve-spark-ml-model-using-play-framework-and-s3/';
+
+      var disqus_title = "Serve Spark ML Models Using Play Framework and S3";
+
+
+      function run_disqus_script(disqus_script) {
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+
+      
+        var disqus_config = function () {
+            this.page.url = disqus_url;
+            this.page.identifier = disqus_identifier;
+            this.page.title = disqus_title;
+        };
+        run_disqus_script('embed.js');
+      
+
+    </script>
+  
+
+
+
+
+
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+  
+
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

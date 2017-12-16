@@ -1,0 +1,960 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="google-site-verification" content="Zqibe9a-H3xmpUfZofRbofarANkAKbRjIs07iLIVslw" />
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="deployment,machine learning,offline evaluation,ab testing,monitoring,alerting," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Commit Logs" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="In an earlier post, I talked about predictive model deployment with Spark. That post mainly addresses the issues around how to persist a trained model and serve it online in real-time to users. Howeve">
+<meta name="keywords" content="deployment,machine learning,offline evaluation,ab testing,monitoring,alerting">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Predictive Model System - Some Missing Components">
+<meta property="og:url" content="https://www.commitlogs.com/2016/12/17/predictive-model-deployment-missing-components/index.html">
+<meta property="og:site_name" content="Commit Logs">
+<meta property="og:description" content="In an earlier post, I talked about predictive model deployment with Spark. That post mainly addresses the issues around how to persist a trained model and serve it online in real-time to users. Howeve">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2016-12-23T09:59:43.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Predictive Model System - Some Missing Components">
+<meta name="twitter:description" content="In an earlier post, I talked about predictive model deployment with Spark. That post mainly addresses the issues around how to persist a trained model and serve it online in real-time to users. Howeve">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 'undefined',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://www.commitlogs.com/2016/12/17/predictive-model-deployment-missing-components/"/>
+
+
+
+
+
+<link rel="canonical" href=" { { site.url } }{ { page.url } }" />
+<script type="text/javascript">
+    var host = "commitlogs.com";
+    if ((host == window.location.host) && (window.location.protocol != "https:"))
+        window.location.protocol = "https";
+</script>
+
+
+<meta content='@_LeiG' name='twitter:site'/>
+<meta content='@_LeiG' name='twitter:creator'/>
+<meta property="og:image" content="/favicon.ico" />
+
+
+  <title> Predictive Model System - Some Missing Components | Commit Logs </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-83286843-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Commit Logs</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <h1 class="site-subtitle" itemprop="description">Lei Gong</h1>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/About" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://www.commitlogs.com/2016/12/17/predictive-model-deployment-missing-components/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Lei Gong">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/favicon.ico">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Commit Logs">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Commit Logs" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                Predictive Model System - Some Missing Components
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-12-17T13:30:48-08:00">
+                2016-12-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/12/17/predictive-model-deployment-missing-components/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/12/17/predictive-model-deployment-missing-components/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>In an earlier post, I talked about <a href="http://commitlogs.com/2016/11/19/predictive-model-deployment-with-spark/" target="_blank" rel="noopener">predictive model deployment with Spark</a>. That post mainly addresses the issues around how to persist a trained model and serve it online in real-time to users. However, there are many other concerns when one set out to build a predictive model system, especially around the robustness and reliability of the system, since predictive models can go terribly wrong without a single error message in the log.</p>
+<p>In this post, I am going to discuss, what I’d like to call, the “continuous deployment” aspects of the predictive model system. Specifically, the “test suites”, i.e., the offline evaluation and A/B testing components around model performance, and monitoring/alerting components around feature generation and model validity.</p>
+<h2 id="Offline-evaluation-and-A-B-testing"><a href="#Offline-evaluation-and-A-B-testing" class="headerlink" title="Offline evaluation and A/B testing"></a>Offline evaluation and A/B testing</h2><p>The concepts of offline evaluation and A/B testing shouldn’t be new to most people with some modeling background, since they both are widely adopted techniques. Here I am going to focus on how/why they are incoporated into a predictive model system.</p>
+<p>I would compare the offline evaluation and A/B testing components in a predictive model system with the tests (e.g., unit test, integration test, or whatever test) in a general software system, simply because they both need to be run/pass before a model can be actually deployed to production.</p>
+<p>A simplified model deployment checklist is:</p>
+<ol>
+<li>model development</li>
+<li>offline evaluation w.r.t. model performance</li>
+<li>A/B testing w.r.t. business metrics</li>
+<li>pick the best model</li>
+<li>model deployment</li>
+</ol>
+<p>The offline evaluation is consisted of some performance scores, e.g., AUC and/or F1 score, that needs to pass certain threshold. These scores are calculated off the training/test dataset and serve as an approximate evaluation of the true model performance. It is not as accurate as A/B testing, but it speeds up development iterations significantly, since an A/B test usually takes days to see a significant result if any. I would recommend set a relatively loose threshold for offline evaluation to filter out the obvious losers and pass a set of “good” models to A/B testing.</p>
+<p>The A/B testing serves as the gate keeper by running two or more models simultaneously. It evaluates a model performance with true users based on business metrics. In most cases, one would expect the A/B testing results to be consistent with the offline evaluation scores. That is, a better offline evaluated model would win in A/B testing. However, there are times the results are different. In those cases, we should, of course, trust the A/B testing result, but one should also take a step back to think about the reasons behind this discrepancy. My experience tells me that, in those cases, there likely to be something pretty informative to improve the next verison of the model.</p>
+<p>These two “tests” help to foster a relative fast model iteration speed and ensure a true model improvement. They are both important steps to achieve an automated deployment with confidence.</p>
+<h2 id="Monitoring-and-alerting"><a href="#Monitoring-and-alerting" class="headerlink" title="Monitoring and alerting"></a>Monitoring and alerting</h2><p>In general, good monitoring/alerting setups help to identify possible defects in a system and analyze root cause when things go wrong. For predictive model system, they are arguably more critical and need to be set up with more components than the typical ones for websites. That is, besides the monitoring/alerting on processing time, responsiveness and uptime, we need tracking systems in place for feature generation and model performance.</p>
+<p>In a predictive model system, features are usually either generated by periodic offline jobs or read directly from production database (see <a href="http://commitlogs.com/2016/11/19/predictive-model-deployment-with-spark/" target="_blank" rel="noopener">this post</a>). All deployed models are trained based on training data at the time of model fitting. Therefore, for models to perform properly, the distribution of feature values should be consistent between training data and production data. This seems to be a safe assumption, since, in theory, training data is just a sample of today’s production data. However, in the real-world, there are at least two ways things could go wrong under your nose.</p>
+<p>For one possibility, the feature generation jobs may produce erroneous results. It may be due to bugs in the job itself or from upstream data sources. This type of error is close to errors in any software system and we could use similar approaches to set up monitoring/alerting. In addition, it is also helpful to track basic statistics of feature values such as mean, median and variance in case any less obvious things are off (I ran into an instance where all features are generated as 0’s without triggering the failed job alert since the job ran “successfully” with erroneous numerical calculations).</p>
+<p>Another possibility is the feature distribution itself may change significantly over time. This could be caused by user behavioral changes led by product changes or other macro changes not directly related to the model itself. Because there is no error per se in such cases, this type of distributional changes is much harder to detect, let alone fix, but it will inevitably compromise the model performance. To catch these unexpected changes, we could try using basic statistics tacking for feature values and/or monitor the model performance online to make sure it is reasonably. In order to evaluate online model performance, a separate offline job is likely needed to gather predicted values versus true outcomes, and compute model performance using the same offline evaluation metrics. The computed metrics is then persisted somewhere in a time-series fashion and used for monitoring/alerting.</p>
+<p>With these addtional monitoring/alerting components, one would be more confident in an automated predictive model system and sleep better at night, if not paged by the alerts ;-).</p>
+<h2 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h2><blockquote>
+<p>Automation comes with the risk of breaking things.</p>
+</blockquote>
+<p>In this post, I attempted to cover a few components for building reliable predictive model systems and I hope you would find it helpful. Since I just started out to build this type of systems, I am sure there are many pieces that are still missing.</p>
+<p>I would really appreciate your thoughts/comments here. Feel free to leave them following this post or tweet me <a href="http://twitter.com/home?status=@_LeiG" target="_blank" rel="noopener">@_LeiG</a>.</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/deployment/" rel="tag"># deployment</a>
+          
+            <a href="/tags/machine-learning/" rel="tag"># machine learning</a>
+          
+            <a href="/tags/offline-evaluation/" rel="tag"># offline evaluation</a>
+          
+            <a href="/tags/ab-testing/" rel="tag"># ab testing</a>
+          
+            <a href="/tags/monitoring/" rel="tag"># monitoring</a>
+          
+            <a href="/tags/alerting/" rel="tag"># alerting</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/12/10/basic-middleware-in-expressjs/" rel="next" title="Basic Middleware in ExpressJS">
+                <i class="fa fa-chevron-left"></i> Basic Middleware in ExpressJS
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/12/24/yearly-retrospective-2016/" rel="prev" title="Yearly Retrospective 2016">
+                Yearly Retrospective 2016 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- Go to www.addthis.com/dashboard to customize your tools -->
+<div class="addthis_inline_share_toolbox">
+  <script type = "text/javascript" src = "//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-57cc6969fe948040" async = "async" ></script>
+</div>
+
+      
+    </div>
+
+    <!-- Begin MailChimp Signup Form -->
+<link href="//cdn-images.mailchimp.com/embedcode/slim-10_7.css" rel="stylesheet" type="text/css">
+<style type="text/css">
+  #mc_embed_signup{background:#fff; clear:left; font-size:13px; font-style:sans-serif; }
+  #mc_embed_signup #mce-EMAIL{width: 100%; font-size:13px;}
+  #mc_embed_signup #mc-embedded-subscribe{float: right; font-size:13px; width: 80px;}
+  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+  We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+</style>
+<div id="mc_embed_signup">
+  <form action="//commitlogs.us14.list-manage.com/subscribe/post?u=6313029766166dc051a2e8268&amp;id=681c5b979d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+    <div id="mc_embed_signup_scroll">
+      <label style="color: #666666; font-size: 13px;">JOIN A COMMUNITY FOR MAKERS.</label>
+      <input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="Enter your email..." required>
+      <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+      <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_6313029766166dc051a2e8268_681c5b979d" tabindex="-1" value=""></div>
+      <div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+    </div>
+  </form>
+ </div>
+ <!--End mc_embed_signup-->
+
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/favicon.ico"
+               alt="Lei Gong" />
+          <p class="site-author-name" itemprop="name">Lei Gong</p>
+          <p class="site-description motion-element" itemprop="description">It is not just about software development and craftsmanship.</p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">26</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">78</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/_LeiG" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.github.com/LeiG" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.linkedin.com/in/imleigong" target="_blank" title="LinkedIn">
+                  
+                    <i class="fa fa-fw fa-linkedin"></i>
+                  
+                  LinkedIn
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:lei@commitlogs.com" target="_blank" title="Contact">
+                  
+                    <i class="fa fa-fw fa-envelope"></i>
+                  
+                  Contact
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Offline-evaluation-and-A-B-testing"><span class="nav-number">1.</span> <span class="nav-text"><a href="#Offline-evaluation-and-A-B-testing" class="headerlink" title="Offline evaluation and A/B testing"></a>Offline evaluation and A/B testing</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Monitoring-and-alerting"><span class="nav-number">2.</span> <span class="nav-text"><a href="#Monitoring-and-alerting" class="headerlink" title="Monitoring and alerting"></a>Monitoring and alerting</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Summary"><span class="nav-number">3.</span> <span class="nav-text"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lei Gong</span>
+</div>
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'lei-gong';
+      var disqus_identifier = '2016/12/17/predictive-model-deployment-missing-components/';
+
+      var disqus_title = "Predictive Model System - Some Missing Components";
+
+
+      function run_disqus_script(disqus_script) {
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+
+      
+        var disqus_config = function () {
+            this.page.url = disqus_url;
+            this.page.identifier = disqus_identifier;
+            this.page.title = disqus_title;
+        };
+        run_disqus_script('embed.js');
+      
+
+    </script>
+  
+
+
+
+
+
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+  
+
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

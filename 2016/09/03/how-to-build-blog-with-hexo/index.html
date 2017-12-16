@@ -1,0 +1,1002 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="google-site-verification" content="Zqibe9a-H3xmpUfZofRbofarANkAKbRjIs07iLIVslw" />
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="javascript,github,node,dns," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Commit Logs" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="I have been procrastinating on building a personal blog for quite a while. It is one of those things that you know it is important and would do great good to you, but you just can’t seem to find time">
+<meta name="keywords" content="javascript,github,node,dns">
+<meta property="og:type" content="article">
+<meta property="og:title" content="How To Build A Blog With Hexo On Github Page">
+<meta property="og:url" content="https://www.commitlogs.com/2016/09/03/how-to-build-blog-with-hexo/index.html">
+<meta property="og:site_name" content="Commit Logs">
+<meta property="og:description" content="I have been procrastinating on building a personal blog for quite a while. It is one of those things that you know it is important and would do great good to you, but you just can’t seem to find time">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2016-09-18T05:02:56.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="How To Build A Blog With Hexo On Github Page">
+<meta name="twitter:description" content="I have been procrastinating on building a personal blog for quite a while. It is one of those things that you know it is important and would do great good to you, but you just can’t seem to find time">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 'undefined',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://www.commitlogs.com/2016/09/03/how-to-build-blog-with-hexo/"/>
+
+
+
+
+
+<link rel="canonical" href=" { { site.url } }{ { page.url } }" />
+<script type="text/javascript">
+    var host = "commitlogs.com";
+    if ((host == window.location.host) && (window.location.protocol != "https:"))
+        window.location.protocol = "https";
+</script>
+
+
+<meta content='@_LeiG' name='twitter:site'/>
+<meta content='@_LeiG' name='twitter:creator'/>
+<meta property="og:image" content="/favicon.ico" />
+
+
+  <title> How To Build A Blog With Hexo On Github Page | Commit Logs </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-83286843-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Commit Logs</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <h1 class="site-subtitle" itemprop="description">Lei Gong</h1>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/About" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://www.commitlogs.com/2016/09/03/how-to-build-blog-with-hexo/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Lei Gong">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/favicon.ico">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Commit Logs">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Commit Logs" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                How To Build A Blog With Hexo On Github Page
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-09-03T09:54:00-07:00">
+                2016-09-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/09/03/how-to-build-blog-with-hexo/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/09/03/how-to-build-blog-with-hexo/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>I have been procrastinating on building a personal blog for quite a while. It is one of those things that you know it is important and would do great good to you, but you just can’t seem to find time to finally work on it (and, yes, almost always, it is just your another excuse).</p>
+<p>Things have changed after I am half way through this awesome book (<a href="http://amzn.to/2couWIP" target="_blank" rel="noopener">Soft Skills: The software developer’s life manual</a>) by John Sonmez. The book again emphasizes the importance of a well-maintained blog to your personal brand and your career as a developer, among other good career tips. More importantly, it teaches a few really practical GTD tricks that seems to have cured with my procrastination so far (FYI, I am using them right now to write this blog post).</p>
+<p>So, here your are, at my new blog “Commit Logs” at <a href="commitlogs.com">commitlogs.com</a>, where I will be blogging about programming, data science and technology in general. </p>
+<p>Alright, enough talking, let’s see some code :).</p>
+<h2 id="Step-by-Step-Guide"><a href="#Step-by-Step-Guide" class="headerlink" title="Step-by-Step Guide"></a>Step-by-Step Guide</h2><p>So you have decided to build your own blog. There are a couple of questions that you need to ask yourself.</p>
+<ul>
+<li><p><strong>Where you want to host your blog?</strong></p>
+<p>  I chose Github Page, instead of a more traditional wordpress based host, because 1) I already use Github on a daily basis for other projects 2) there is no over-head to set up a database 3) it provides a free 300Mb storage space.</p>
+</li>
+<li><p><strong>What framework you want to use?</strong></p>
+<p>  Assuming you decided to host your blog on Github Page, there are a couple of frameworks to choose from, e.g. Jekyll (ruby), Pelican (python) and Hexo (javascript). All these frameworks provide dummy setup within a few commands so you don’t really need to know the langauge to start with. I decided to use Hexo for its beautiful themes (you know those front-end guys love javascript, right?) and numerous handy plugins.</p>
+</li>
+<li><p><strong>Whether you want to use customized domain name?</strong></p>
+<p>  I would strongly recommend as it is important to build your own personal brand and it really only costs a few bucks a year. It is also very easy to set up. More on this later.</p>
+</li>
+</ul>
+<p>You can keep on reading if you (smartly) decided to host your shiny new blog on Github Page using Hexo ;).</p>
+<h3 id="Prerequisites"><a href="#Prerequisites" class="headerlink" title="Prerequisites"></a>Prerequisites</h3><p>Before started, you need to make sure <code>node.js</code> and <code>git</code> are installed locally. If not, you can get them installed easily with the follwing commands in terminal (note that I am assuming your are using a Mac). </p>
+<p><strong>Install <code>homebrew</code></strong></p>
+<p>In case you haven’t already, you should also install <code>homebrew</code>, which I, among a lot of other folks, believe is the best package manager on Mac.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ /usr/bin/ruby -e &quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)&quot;</span><br></pre></td></tr></table></figure>
+<p><strong>Install <code>git</code></strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ brew install git</span><br></pre></td></tr></table></figure>
+<p>Check if <code>git</code> is installed successfully with <code>git --version</code>.</p>
+<p><strong>Install <code>node.js</code> and <code>npm</code></strong></p>
+<p><code>node.js</code> is a javascript runtime and <code>npm</code> is its package manager, which will be installed automatically together with <code>node.js</code>.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ brew install node</span><br></pre></td></tr></table></figure>
+<p>Check if they are installed successfully with <code>node --version</code> and <code>npm --version</code>.</p>
+<h3 id="Set-up-Hexo"><a href="#Set-up-Hexo" class="headerlink" title="Set up Hexo"></a>Set up Hexo</h3><p><a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> can be installed locally with one line of command.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install hexo-cli -g</span><br></pre></td></tr></table></figure>
+<p>Suppose you want to save all files related to your blog under a local folder named <code>myblog</code>.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ hexo init myblog</span><br><span class="line">$ cd myblog</span><br><span class="line">$ npm install</span><br><span class="line">$ hexo g #generate the blog site</span><br><span class="line">$ hexo s #host the site locally</span><br></pre></td></tr></table></figure>
+<p>Surprise, surprise, you have already successfully built your blog locally with a sample blog post. Visit <a href="http://localhost:4000/" target="_blank" rel="noopener">http://localhost:4000/</a> to find it out!</p>
+<h4 id="Choose-a-Hexo-theme"><a href="#Choose-a-Hexo-theme" class="headerlink" title="Choose a Hexo theme"></a>Choose a Hexo theme</h4><p>One of the advantages of Hexo is that its community has contributed to a great number of awesome themes for your blog (you can, of course, build your own if you desire). You can find a list of samples on their <a href="https://hexo.io/themes/" target="_blank" rel="noopener">website</a> or <a href="https://github.com/hexojs/hexo/wiki/Themes" target="_blank" rel="noopener">Github wiki</a>.</p>
+<p>Pick the one that you like (I am using <a href="https://github.com/iissnan/hexo-theme-next" target="_blank" rel="noopener">next</a>, the theme of this blog, as an example) and install it under your <code>myblog</code> folder.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ hexo clean</span><br><span class="line">$ git clone https://github.com/iissnan/hexo-theme-next.git themes/next</span><br></pre></td></tr></table></figure>
+<p>To apply the installed theme, you just need to modify <code>myblog/_config.yaml</code>.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># Extensions</span><br><span class="line">## Themes: https://hexo.io/themes/</span><br><span class="line">theme: next</span><br></pre></td></tr></table></figure>
+<p>Note that, there are actually two <code>_config.yaml</code> files. One is directly under <code>myblog/</code> and the other is under <code>myblog/theme/next</code>, which is specific to each theme and used to modify a theme. I am not going into too much details about the configuration of <code>myblog/theme/next/_config.yaml</code>. You can usually find pretty good documentation under the git repo of the theme that you chose.</p>
+<p>To see the new appearance of your blog, excute the following commands and refresh the page <a href="http://localhost:4000/" target="_blank" rel="noopener">http://localhost:4000/</a>.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ hexo clean</span><br><span class="line">$ hexo g</span><br><span class="line">$ hexo s</span><br></pre></td></tr></table></figure>
+<h4 id="Add-useful-plugins"><a href="#Add-useful-plugins" class="headerlink" title="Add useful plugins"></a>Add useful plugins</h4><p>Besides themes, the Hexo community also develops many useful <a href="https://hexo.io/plugins/" target="_blank" rel="noopener">plugins</a> that can be enabled pretty easily. Take the ones that I use for this blog for example. You can install them via</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ npm install hexo-generator-feed --save</span><br><span class="line">$ npm install hexo-generator-sitemap --save</span><br><span class="line">$ npm install hexo-generator-search --save</span><br></pre></td></tr></table></figure>
+<p>and then edit the <code>myblog/_config.yaml</code> by adding the following lines.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"># Extensions</span><br><span class="line">## Plugins: https://hexo.io/plugins/</span><br><span class="line">Plugins:</span><br><span class="line">- hexo-generator-feed</span><br><span class="line">- hexo-generator-sitemap</span><br><span class="line">- hexo-generator-search</span><br><span class="line"></span><br><span class="line"># Feed Atom</span><br><span class="line">feed:</span><br><span class="line">  type: atom</span><br><span class="line">  path: atom.xml</span><br><span class="line">  limit: 20</span><br><span class="line"></span><br><span class="line"># Sitemap</span><br><span class="line">sitemap:</span><br><span class="line">  path: sitemap.xml</span><br><span class="line"></span><br><span class="line">search:</span><br><span class="line">  path: search.xml</span><br><span class="line">  field: post</span><br></pre></td></tr></table></figure>
+<p>These plugins will generate three files <code>atom.xml</code>, <code>sitemap.xml</code> and <code>search.xml</code> under <code>myblog/public/</code> after you generate the site to enable RSS feed and other utilities (details can be found under the git repos for these plugins).</p>
+<p>So far, you have finished almost 80% of local development work, isn’t it easy?</p>
+<h3 id="Set-up-Github-Page"><a href="#Set-up-Github-Page" class="headerlink" title="Set up Github Page"></a>Set up Github Page</h3><p>Now, let us set up the Github Page for the new blog. Every Github user account has one repo to host a blog page and the repo has to be named as <code>username.github.io</code>. Here is my repo for example <a href="https://github.com/LeiG/LeiG.github.io" target="_blank" rel="noopener">https://github.com/LeiG/LeiG.github.io</a>.</p>
+<p>You just need to create an empty repo with a name of the required format. It is exactly the same as what you would do with other repos, so I am going to skip the details here. A good Github wiki page may help if you run into any issues (see <a href="https://help.github.com/articles/creating-a-new-repository/" target="_blank" rel="noopener">creating-a-new-repository</a>).</p>
+<h3 id="Deploy-to-Gihub-Page"><a href="#Deploy-to-Gihub-Page" class="headerlink" title="Deploy to Gihub Page"></a>Deploy to Gihub Page</h3><p>Here comes the most important step. That is, you need to deploy your local blog to Github Page. Don’t freak out. It is just as simple as all the previous steps.</p>
+<p>First, you will need to install a plugin</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
+<p>and add the following to <code>myblog/_config.yaml</code> (replace <code>LeiG</code> with yours).</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">deploy:</span><br><span class="line">  type: git</span><br><span class="line">  repo: git@github.com:LeiG/LeiG.github.io.git</span><br><span class="line">  branch: master</span><br></pre></td></tr></table></figure>
+<p>After that, deploy to Github is as easy as a one-line command. If you run into any permission issues, it may be that you need to add ssh key to your Github account (see <a href="https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account/" target="_blank" rel="noopener">here</a>).</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo d -g</span><br></pre></td></tr></table></figure>
+<p>Note Hexo blog can be deployed to multiple platforms. Here I only cover the Github part, but you can find all the details on this <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">wiki</a> page. </p>
+<p>Okay, if you have followed through all the steps, you should now be able to access your Github Page at <a href="https://leig.github.io/" target="_blank" rel="noopener">LeiG.github.io</a> (replace <code>LeiG</code> with your own username)! </p>
+<h3 id="Set-up-customized-domain-name"><a href="#Set-up-customized-domain-name" class="headerlink" title="Set up customized domain name"></a>Set up customized domain name</h3><p>If you are serious about this blog thing, I would recommend you to get a customized domain name. You can get one for a few bucks very easily and it would greatly help your personal brand. Plus, it just feels so cool to have a space on the Internet that is yours.</p>
+<p>I registered my domain name <a href="http://commitlogs.com" target="_blank" rel="noopener">commitlogs.com</a> with <a href="https://www.namecheap.com/?aff=103913" target="_blank" rel="noopener">Namecheap</a>, which is one of many similar services, but I find it very easy to deal with.</p>
+<h4 id="Add-a-CNAME-file"><a href="#Add-a-CNAME-file" class="headerlink" title="Add a CNAME file"></a>Add a CNAME file</h4><p>After you decide on your domain name, you need to add a CNAME to the git repo. Take my domain name <code>commitlogs.com</code> for example, you need to create a file named <code>CNAME</code> under <code>myblog/public</code> that contains only one line of content.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">commitlogs.com</span><br></pre></td></tr></table></figure>
+<h4 id="Set-up-the-DNS"><a href="#Set-up-the-DNS" class="headerlink" title="Set up the DNS"></a>Set up the DNS</h4><p>Use the setup at <a href="https://www.namecheap.com/?aff=103913" target="_blank" rel="noopener">Namecheap</a>, you first navigate to your <strong>Domain List</strong> &gt;&gt; <strong>Advanced DNS</strong> option and set up the DNS as the following:</p>
+<ol>
+<li>Click the <strong>Add New Record</strong> button and then select <code>A Record</code> from the list. You will then enter <code>@</code> for <strong>Host</strong> and <code>192.30.252.153</code> for <strong>IP Address</strong>. Leave the <strong>TTL</strong> as <code>Automatic</code>.</li>
+<li>Add another new <code>A Record</code> with the same <code>@</code> for <strong>Host</strong>, but <code>192.30.252.154</code> for <strong>IP Address</strong>. Leave the <strong>TTL</strong> as <code>Automatic</code>.</li>
+<li>Add a new <code>CNAME Record</code>. For <strong>Host</strong> set <code>www</code> and for the <strong>IP Address</strong> use your Github Page address with trailing period (e.g. <code>LeiG.github.io.</code>).</li>
+</ol>
+<p>Save the changes and you are all set, although it may take some time for the changes to propagate.</p>
+<h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><p>You can now post your first blog article or generate a new page to start your exciting blog journey.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new &quot;my_first_blog_post&quot; #create a new blog post</span><br><span class="line">$ hexo new page &quot;About&quot; #create a new blog page</span><br></pre></td></tr></table></figure>
+<p>Hexo automatically generate a Markdown file under <code>myblog/source/_posts/</code> and you can use your favorite Markdown editor to open it and generate awesome content right away.</p>
+<h2 id="Ending"><a href="#Ending" class="headerlink" title="Ending"></a>Ending</h2><p>Congratulations on your new blog! </p>
+<p>Hope you enjoy this post and feel free to leave a comment if you have any questions. Remember, the only way to build a successful blog is to consistently produce high quality content.</p>
+<p>Let’s back each other up!</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/javascript/" rel="tag"># javascript</a>
+          
+            <a href="/tags/github/" rel="tag"># github</a>
+          
+            <a href="/tags/node/" rel="tag"># node</a>
+          
+            <a href="/tags/dns/" rel="tag"># dns</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/09/10/scala-fold-foldleft-and-foldright/" rel="prev" title="Scala fold, foldLeft and foldRight">
+                Scala fold, foldLeft and foldRight <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- Go to www.addthis.com/dashboard to customize your tools -->
+<div class="addthis_inline_share_toolbox">
+  <script type = "text/javascript" src = "//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-57cc6969fe948040" async = "async" ></script>
+</div>
+
+      
+    </div>
+
+    <!-- Begin MailChimp Signup Form -->
+<link href="//cdn-images.mailchimp.com/embedcode/slim-10_7.css" rel="stylesheet" type="text/css">
+<style type="text/css">
+  #mc_embed_signup{background:#fff; clear:left; font-size:13px; font-style:sans-serif; }
+  #mc_embed_signup #mce-EMAIL{width: 100%; font-size:13px;}
+  #mc_embed_signup #mc-embedded-subscribe{float: right; font-size:13px; width: 80px;}
+  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+  We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+</style>
+<div id="mc_embed_signup">
+  <form action="//commitlogs.us14.list-manage.com/subscribe/post?u=6313029766166dc051a2e8268&amp;id=681c5b979d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+    <div id="mc_embed_signup_scroll">
+      <label style="color: #666666; font-size: 13px;">JOIN A COMMUNITY FOR MAKERS.</label>
+      <input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="Enter your email..." required>
+      <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+      <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_6313029766166dc051a2e8268_681c5b979d" tabindex="-1" value=""></div>
+      <div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+    </div>
+  </form>
+ </div>
+ <!--End mc_embed_signup-->
+
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/favicon.ico"
+               alt="Lei Gong" />
+          <p class="site-author-name" itemprop="name">Lei Gong</p>
+          <p class="site-description motion-element" itemprop="description">It is not just about software development and craftsmanship.</p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">26</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">78</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/_LeiG" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.github.com/LeiG" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.linkedin.com/in/imleigong" target="_blank" title="LinkedIn">
+                  
+                    <i class="fa fa-fw fa-linkedin"></i>
+                  
+                  LinkedIn
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:lei@commitlogs.com" target="_blank" title="Contact">
+                  
+                    <i class="fa fa-fw fa-envelope"></i>
+                  
+                  Contact
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Step-by-Step-Guide"><span class="nav-number">1.</span> <span class="nav-text"><a href="#Step-by-Step-Guide" class="headerlink" title="Step-by-Step Guide"></a>Step-by-Step Guide</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Prerequisites"><span class="nav-number">1.1.</span> <span class="nav-text"><a href="#Prerequisites" class="headerlink" title="Prerequisites"></a>Prerequisites</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Set-up-Hexo"><span class="nav-number">1.2.</span> <span class="nav-text"><a href="#Set-up-Hexo" class="headerlink" title="Set up Hexo"></a>Set up Hexo</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Choose-a-Hexo-theme"><span class="nav-number">1.2.1.</span> <span class="nav-text"><a href="#Choose-a-Hexo-theme" class="headerlink" title="Choose a Hexo theme"></a>Choose a Hexo theme</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Add-useful-plugins"><span class="nav-number">1.2.2.</span> <span class="nav-text"><a href="#Add-useful-plugins" class="headerlink" title="Add useful plugins"></a>Add useful plugins</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Set-up-Github-Page"><span class="nav-number">1.3.</span> <span class="nav-text"><a href="#Set-up-Github-Page" class="headerlink" title="Set up Github Page"></a>Set up Github Page</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Deploy-to-Gihub-Page"><span class="nav-number">1.4.</span> <span class="nav-text"><a href="#Deploy-to-Gihub-Page" class="headerlink" title="Deploy to Gihub Page"></a>Deploy to Gihub Page</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Set-up-customized-domain-name"><span class="nav-number">1.5.</span> <span class="nav-text"><a href="#Set-up-customized-domain-name" class="headerlink" title="Set up customized domain name"></a>Set up customized domain name</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Add-a-CNAME-file"><span class="nav-number">1.5.1.</span> <span class="nav-text"><a href="#Add-a-CNAME-file" class="headerlink" title="Add a CNAME file"></a>Add a CNAME file</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Set-up-the-DNS"><span class="nav-number">1.5.2.</span> <span class="nav-text"><a href="#Set-up-the-DNS" class="headerlink" title="Set up the DNS"></a>Set up the DNS</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Create-a-new-post"><span class="nav-number">1.6.</span> <span class="nav-text"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Ending"><span class="nav-number">2.</span> <span class="nav-text"><a href="#Ending" class="headerlink" title="Ending"></a>Ending</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lei Gong</span>
+</div>
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'lei-gong';
+      var disqus_identifier = '2016/09/03/how-to-build-blog-with-hexo/';
+
+      var disqus_title = "How To Build A Blog With Hexo On Github Page";
+
+
+      function run_disqus_script(disqus_script) {
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+
+      
+        var disqus_config = function () {
+            this.page.url = disqus_url;
+            this.page.identifier = disqus_identifier;
+            this.page.title = disqus_title;
+        };
+        run_disqus_script('embed.js');
+      
+
+    </script>
+  
+
+
+
+
+
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+  
+
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

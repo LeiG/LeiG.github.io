@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <url>
+    <loc>https://www.commitlogs.com/2017/12/15/seedfinder-infrastructure-improve-sample-balance-online-ab-tests/</loc>
+    
+    <lastmod>2017-12-16T20:25:06.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.commitlogs.com/2017/06/26/scala-error-handling-with-option-try-either/</loc>
+    
+    <lastmod>2017-12-16T06:39:30.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.commitlogs.com/2017/03/25/find_side-project-ideas-using-our-old-pal-google/</loc>
+    
+    <lastmod>2017-03-26T17:12:15.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.commitlogs.com/2017/03/11/caching-predictive-models-using-guava-in-scala/</loc>
+    
+    <lastmod>2017-03-15T06:21:11.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.commitlogs.com/2017/02/18/serve-spark-ml-model-using-play-framework-and-s3/</loc>
+    
+    <lastmod>2017-02-23T05:47:43.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.commitlogs.com/2017/01/28/how-to-set-up-gulp-for-front-end-development/</loc>
+    
+    <lastmod>2017-01-29T01:38:57.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.commitlogs.com/2017/01/14/serialize-deserialize-json-with-json4s-in-scala/</loc>
+    
+    <lastmod>2017-01-21T22:02:30.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.commitlogs.com/2017/01/21/comparison-between-aws-dynamodb-and-s3-for-model-metrics-storage/</loc>
+    
+    <lastmod>2017-01-21T22:02:16.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.commitlogs.com/2017/01/07/set-up-blog-like-a-pro-with-addthis-cloudflare-and-mailgun/</loc>
+    
+    <lastmod>2017-01-09T15:40:44.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.commitlogs.com/2016/12/31/always-learning-but-never-for-the-sake-of-it/</loc>
+    
+    <lastmod>2017-01-02T05:10:37.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.commitlogs.com/About/index.html</loc>
+    
+    <lastmod>2017-01-02T03:30:38.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.commitlogs.com/2016/11/19/predictive-model-deployment-with-spark/</loc>
+    
+    <lastmod>2017-01-01T01:19:52.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.commitlogs.com/2016/12/24/yearly-retrospective-2016/</loc>
+    
+    <lastmod>2016-12-26T22:17:33.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.commitlogs.com/2016/12/17/predictive-model-deployment-missing-components/</loc>
+    
+    <lastmod>2016-12-23T09:59:43.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.commitlogs.com/2016/12/10/basic-middleware-in-expressjs/</loc>
+    
+    <lastmod>2016-12-12T17:18:26.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.commitlogs.com/2016/12/03/thoughts-on-dhh-interview/</loc>
+    
+    <lastmod>2016-12-05T01:02:49.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.commitlogs.com/2016/11/26/some-reflections-on-recent-career-change/</loc>
+    
+    <lastmod>2016-12-03T21:50:57.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.commitlogs.com/2016/11/05/laziness-as-a-service/</loc>
+    
+    <lastmod>2016-11-06T23:46:42.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.commitlogs.com/2016/10/29/few-thoughts-on-effective-code-review/</loc>
+    
+    <lastmod>2016-10-31T16:59:25.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.commitlogs.com/2016/10/22/host-my-next-side-project-github-vs-gitlab/</loc>
+    
+    <lastmod>2016-10-23T18:25:50.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.commitlogs.com/2016/10/15/spark-2-new-api-dataset-and-its-predecessors/</loc>
+    
+    <lastmod>2016-10-16T22:18:12.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.commitlogs.com/2016/10/08/spark-2-new-entry-point-sparksession/</loc>
+    
+    <lastmod>2016-10-10T03:15:35.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.commitlogs.com/2016/10/01/scala-trait-and-abstract-class/</loc>
+    
+    <lastmod>2016-10-03T00:37:43.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.commitlogs.com/2016/09/24/scala-pattern-matching/</loc>
+    
+    <lastmod>2016-09-26T04:24:09.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.commitlogs.com/2016/09/17/scala-option-some-and-none/</loc>
+    
+    <lastmod>2016-09-19T04:38:56.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.commitlogs.com/2016/09/03/how-to-build-blog-with-hexo/</loc>
+    
+    <lastmod>2016-09-18T05:02:56.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.commitlogs.com/2016/09/10/scala-fold-foldleft-and-foldright/</loc>
+    
+    <lastmod>2016-09-18T05:02:34.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.commitlogs.com/tags/index.html</loc>
+    
+    <lastmod>2016-09-11T21:40:35.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.commitlogs.com/archives/index.html</loc>
+    
+    <lastmod>2016-08-29T05:20:01.000Z</lastmod>
+    
+  </url>
+  
+</urlset>

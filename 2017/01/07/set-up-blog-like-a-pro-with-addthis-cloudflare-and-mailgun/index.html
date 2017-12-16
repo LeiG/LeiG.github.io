@@ -1,0 +1,968 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="google-site-verification" content="Zqibe9a-H3xmpUfZofRbofarANkAKbRjIs07iLIVslw" />
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="blog,saas,html,https,addthis,cloudflare,mailgun," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Commit Logs" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="It’s been a few month since I first set up my blog using Hexo and Github Page (more details are in an earlier post How To Build A Blog With Hexo On Github Page). As a bonus for myself updating a new p">
+<meta name="keywords" content="blog,saas,html,https,addthis,cloudflare,mailgun">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Set Up Blog Like A Pro With AddThis, Cloudflare and Mailgun">
+<meta property="og:url" content="https://www.commitlogs.com/2017/01/07/set-up-blog-like-a-pro-with-addthis-cloudflare-and-mailgun/index.html">
+<meta property="og:site_name" content="Commit Logs">
+<meta property="og:description" content="It’s been a few month since I first set up my blog using Hexo and Github Page (more details are in an earlier post How To Build A Blog With Hexo On Github Page). As a bonus for myself updating a new p">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2017-01-09T15:40:44.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Set Up Blog Like A Pro With AddThis, Cloudflare and Mailgun">
+<meta name="twitter:description" content="It’s been a few month since I first set up my blog using Hexo and Github Page (more details are in an earlier post How To Build A Blog With Hexo On Github Page). As a bonus for myself updating a new p">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 'undefined',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://www.commitlogs.com/2017/01/07/set-up-blog-like-a-pro-with-addthis-cloudflare-and-mailgun/"/>
+
+
+
+
+
+<link rel="canonical" href=" { { site.url } }{ { page.url } }" />
+<script type="text/javascript">
+    var host = "commitlogs.com";
+    if ((host == window.location.host) && (window.location.protocol != "https:"))
+        window.location.protocol = "https";
+</script>
+
+
+<meta content='@_LeiG' name='twitter:site'/>
+<meta content='@_LeiG' name='twitter:creator'/>
+<meta property="og:image" content="/favicon.ico" />
+
+
+  <title> Set Up Blog Like A Pro With AddThis, Cloudflare and Mailgun | Commit Logs </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-83286843-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Commit Logs</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <h1 class="site-subtitle" itemprop="description">Lei Gong</h1>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/About" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://www.commitlogs.com/2017/01/07/set-up-blog-like-a-pro-with-addthis-cloudflare-and-mailgun/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Lei Gong">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/favicon.ico">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Commit Logs">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Commit Logs" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                Set Up Blog Like A Pro With AddThis, Cloudflare and Mailgun
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-07T10:39:20-08:00">
+                2017-01-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/01/07/set-up-blog-like-a-pro-with-addthis-cloudflare-and-mailgun/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/01/07/set-up-blog-like-a-pro-with-addthis-cloudflare-and-mailgun/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>It’s been a few month since I first set up my blog using Hexo and Github Page (more details are in an earlier post <a href="https://commitlogs.com/2016/09/03/how-to-build-blog-with-hexo/" target="_blank" rel="noopener">How To Build A Blog With Hexo On Github Page</a>). As a bonus for myself updating a new post every week, I decided to upgrade my blog with more features. It is an experiment to learn how the SaaS ecosystem is structrued around blogging community. In this post, I am going to introduce some of the handy SaaS solutions out there with freemium plans and walk through a few how-to’s.</p>
+<h2 id="Share-content-across-media-channels"><a href="#Share-content-across-media-channels" class="headerlink" title="Share content across media channels"></a>Share content across media channels</h2><p>RSS is still alive,  but apparently it is no longer the dominant way people keep up with blog updates. Social media is the new norm for content sharing. To get your message out to a big and engaged audience, you should start to maintain some social media presence (most likely you already had it anyways) and make your site share-friendly.</p>
+<h3 id="Integrate-AddThis"><a href="#Integrate-AddThis" class="headerlink" title="Integrate AddThis"></a>Integrate AddThis</h3><p>AddThis makes it easy for readers to share articles to multiple social media sites. You have probably seen it from other sites already, but it provides a sharing bar so that, with a single click, readers are able to share contents to their favorite social media channels. Its freemium version comes with basic analytic tools and simple HTML snippets to be added to your website. You can even configure the basic design, both for desktop and mobile, of the sharing bar.</p>
+<p>After the initial setup, it is just a matter of copy/paste the generated HTML code into the <code>&lt;body&gt;&lt;/body&gt;</code> of your website.</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- Go to www.addthis.com/dashboard to customize your tools --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span> <span class="attr">src</span>=<span class="string">"//s7.addthis.com/js/300/addthis_widget.js#pubid=ENTER-YOUR-ADDTHIS-ID"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>And walla! you would have a beautifully designed sharing bar like the one on the right side (or bottom, if you are on mobile) of this post on your own blog. Want to test it out? You could try to share this post to your social network via my sharing bar ;-).</p>
+<h3 id="Enable-rich-content"><a href="#Enable-rich-content" class="headerlink" title="Enable rich content"></a>Enable rich content</h3><p>Now that your readers can share your blog posts easily, you probably want to optimize how the others see the shared content. And the end of the day, a better formatted content helps to improve your click through rate (CTR). Luckily, there is the <a href="http://ogp.me" target="_blank" rel="noopener">Open Graph protocol</a>. To enables any web page to become a rich object in a social graph via Open Graph, you need to add some <code>meta</code> tags to the <code>&lt;head&gt;&lt;/head&gt;</code> of your pages.</p>
+<p>More details can be found on its website, but there are four required tags.</p>
+<ul>
+<li><code>og:title</code> - The title of your object as it should appear within the graph, e.g., “The Rock”.</li>
+<li><code>og:type</code> - The type of your object, e.g., “video.movie”. Depending on the type you specify, other properties may also be required.</li>
+<li><code>og:image</code> - An image URL which should represent your object within the graph.</li>
+<li><code>og:url</code> - The canonical URL of your object that will be used as its permanent ID in the graph, e.g., “<a href="http://www.imdb.com/title/tt0117500/" target="_blank" rel="noopener">http://www.imdb.com/title/tt0117500/</a>“.</li>
+</ul>
+<h2 id="Switch-to-HTTPS-with-Cloudflare"><a href="#Switch-to-HTTPS-with-Cloudflare" class="headerlink" title="Switch to HTTPS with Cloudflare"></a>Switch to HTTPS with Cloudflare</h2><p><code>HTTPS</code> is a protocol for secure communication over network, which provides authentication of the websites being communicated. It is especially useful for websites that involve sensitive information, such as login and payment. But there is a general push for secured communication for all websites. Most famously, Google uses <a href="https://webmasters.googleblog.com/2014/08/https-as-ranking-signal.html" target="_blank" rel="noopener">HTTPS as a ranking signal</a> in its algorithm, which, by itself along, is enough reason for anyone to adopt the HTTPS protocol.</p>
+<p>You can pay a few bucks and get a paid SSL certificate that provides end to end encryption, but I decided to go with the free SSL certificate from Cloudflare since I am pretty sure my static blog is safe ;-).</p>
+<p>To get that green lock on my address bar, I first follow this <a href="https://www.namecheap.com/support/knowledgebase/article.aspx/9607/2210/how-to-set-up-dns-records-for-your-domain-in-cloudflare-account" target="_blank" rel="noopener">tutorial</a> to switch my nameserver from Namecheap to Cloudflare (this step could take up to 24 hours for verification).</p>
+<p>And, a few code snippets need to be added to fully enable HTTPS for the site.</p>
+<p>In <code>config.yml</code> add these so that the static contents are served over the HTTPS version.</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">url:</span> <span class="attr">https://www.commitlogs.com</span></span><br><span class="line"><span class="attr">enforce_ssl:</span> <span class="string">www.commitlogs.com</span></span><br></pre></td></tr></table></figure>
+<p>In <code>&lt;head&gt;&lt;/head&gt;</code>, set up canonical link tag so that search engine know to serve the HTTPS version of the site and also redirect users from HTTP version to the HTTPS version.</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">"canonical"</span> <span class="attr">href</span>=<span class="string">" &#123; &#123; site.url &#125; &#125;&#123; &#123; page.url &#125; &#125;"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> host = <span class="string">"commitlogs.com"</span>;</span></span><br><span class="line"><span class="javascript">    <span class="keyword">if</span> ((host == <span class="built_in">window</span>.location.host) &amp;&amp; (<span class="built_in">window</span>.location.protocol != <span class="string">"https:"</span>))</span></span><br><span class="line"><span class="javascript">        <span class="built_in">window</span>.location.protocol = <span class="string">"https"</span>;</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h2 id="Use-domain-specific-email-address-with-Mailgun"><a href="#Use-domain-specific-email-address-with-Mailgun" class="headerlink" title="Use domain specific email address with Mailgun"></a>Use domain specific email address with Mailgun</h2><p>Ever wondering how that cool kid gets his own email domain name? Guess what, you already had one when you registered your domain name. Depending on your nameserver, any domain name comes with unlimited email forwarding and some number of email sending support for free (you can always pay to get more).</p>
+<p>The reason I am using Mailgun is that it provides email sending capability by the number of emails sent per month, not by number of email addresses. And, since I am using Cloudflare for free SSL certificate, I lose the free email sending service from my nameserver. Plus, the setup for Mailgun is super easy that you just need to make a few changes with your DNS provider, not even a line of code for your website. Here is a good <a href="https://medium.com/@ustcboulder/setup-mailgun-on-namecheap-spf-dkim-cname-and-mx-684b5c1fb492#.pajo6hrcz" target="_blank" rel="noopener">tutorial</a> if you are lazy to google it out.</p>
+<h2 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h2><p>Alright, hope you enjoyed this post from the upgraded version of <a href="https://commitlogs.com" target="_blank" rel="noopener">commitlogs.com</a>. I think these SaaS are very handy and can get you a better start on your blogging journey. But, I want to call out the following quote from a successful man, since the only way to get your blog going is to keep blogging.</p>
+<blockquote>
+<p>Content is king.</p>
+<p align="right">— Bill Gates</p>
+
+</blockquote>
+<p>As always, I would really appreciate your thoughts/comments. Feel free to leave them following this post or tweet me <a href="http://twitter.com/home?status=@_LeiG" target="_blank" rel="noopener">@_LeiG</a>.</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/blog/" rel="tag"># blog</a>
+          
+            <a href="/tags/saas/" rel="tag"># saas</a>
+          
+            <a href="/tags/html/" rel="tag"># html</a>
+          
+            <a href="/tags/https/" rel="tag"># https</a>
+          
+            <a href="/tags/addthis/" rel="tag"># addthis</a>
+          
+            <a href="/tags/cloudflare/" rel="tag"># cloudflare</a>
+          
+            <a href="/tags/mailgun/" rel="tag"># mailgun</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/12/31/always-learning-but-never-for-the-sake-of-it/" rel="next" title="Always Learning, But Never For The Sake Of It">
+                <i class="fa fa-chevron-left"></i> Always Learning, But Never For The Sake Of It
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/01/14/serialize-deserialize-json-with-json4s-in-scala/" rel="prev" title="Serialize and deserialize JSON with json4s in Scala">
+                Serialize and deserialize JSON with json4s in Scala <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- Go to www.addthis.com/dashboard to customize your tools -->
+<div class="addthis_inline_share_toolbox">
+  <script type = "text/javascript" src = "//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-57cc6969fe948040" async = "async" ></script>
+</div>
+
+      
+    </div>
+
+    <!-- Begin MailChimp Signup Form -->
+<link href="//cdn-images.mailchimp.com/embedcode/slim-10_7.css" rel="stylesheet" type="text/css">
+<style type="text/css">
+  #mc_embed_signup{background:#fff; clear:left; font-size:13px; font-style:sans-serif; }
+  #mc_embed_signup #mce-EMAIL{width: 100%; font-size:13px;}
+  #mc_embed_signup #mc-embedded-subscribe{float: right; font-size:13px; width: 80px;}
+  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+  We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+</style>
+<div id="mc_embed_signup">
+  <form action="//commitlogs.us14.list-manage.com/subscribe/post?u=6313029766166dc051a2e8268&amp;id=681c5b979d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+    <div id="mc_embed_signup_scroll">
+      <label style="color: #666666; font-size: 13px;">JOIN A COMMUNITY FOR MAKERS.</label>
+      <input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="Enter your email..." required>
+      <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+      <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_6313029766166dc051a2e8268_681c5b979d" tabindex="-1" value=""></div>
+      <div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+    </div>
+  </form>
+ </div>
+ <!--End mc_embed_signup-->
+
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/favicon.ico"
+               alt="Lei Gong" />
+          <p class="site-author-name" itemprop="name">Lei Gong</p>
+          <p class="site-description motion-element" itemprop="description">It is not just about software development and craftsmanship.</p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">26</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">78</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/_LeiG" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.github.com/LeiG" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.linkedin.com/in/imleigong" target="_blank" title="LinkedIn">
+                  
+                    <i class="fa fa-fw fa-linkedin"></i>
+                  
+                  LinkedIn
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:lei@commitlogs.com" target="_blank" title="Contact">
+                  
+                    <i class="fa fa-fw fa-envelope"></i>
+                  
+                  Contact
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Share-content-across-media-channels"><span class="nav-number">1.</span> <span class="nav-text"><a href="#Share-content-across-media-channels" class="headerlink" title="Share content across media channels"></a>Share content across media channels</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Integrate-AddThis"><span class="nav-number">1.1.</span> <span class="nav-text"><a href="#Integrate-AddThis" class="headerlink" title="Integrate AddThis"></a>Integrate AddThis</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Enable-rich-content"><span class="nav-number">1.2.</span> <span class="nav-text"><a href="#Enable-rich-content" class="headerlink" title="Enable rich content"></a>Enable rich content</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Switch-to-HTTPS-with-Cloudflare"><span class="nav-number">2.</span> <span class="nav-text"><a href="#Switch-to-HTTPS-with-Cloudflare" class="headerlink" title="Switch to HTTPS with Cloudflare"></a>Switch to HTTPS with Cloudflare</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Use-domain-specific-email-address-with-Mailgun"><span class="nav-number">3.</span> <span class="nav-text"><a href="#Use-domain-specific-email-address-with-Mailgun" class="headerlink" title="Use domain specific email address with Mailgun"></a>Use domain specific email address with Mailgun</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Summary"><span class="nav-number">4.</span> <span class="nav-text"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lei Gong</span>
+</div>
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'lei-gong';
+      var disqus_identifier = '2017/01/07/set-up-blog-like-a-pro-with-addthis-cloudflare-and-mailgun/';
+
+      var disqus_title = "Set Up Blog Like A Pro With AddThis, Cloudflare and Mailgun";
+
+
+      function run_disqus_script(disqus_script) {
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+
+      
+        var disqus_config = function () {
+            this.page.url = disqus_url;
+            this.page.identifier = disqus_identifier;
+            this.page.title = disqus_title;
+        };
+        run_disqus_script('embed.js');
+      
+
+    </script>
+  
+
+
+
+
+
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+  
+
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

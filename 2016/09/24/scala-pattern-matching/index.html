@@ -1,0 +1,968 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="google-site-verification" content="Zqibe9a-H3xmpUfZofRbofarANkAKbRjIs07iLIVslw" />
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="scala,functional programming,pattern matching,case class," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Commit Logs" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="Pattern matching is one of the most used features in Scala. Imagine yourself in a situation where you need to write a series of if-else-if statements to analyze the arguments of a certain function. It">
+<meta name="keywords" content="scala,functional programming,pattern matching,case class">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Scala Pattern Matching">
+<meta property="og:url" content="https://www.commitlogs.com/2016/09/24/scala-pattern-matching/index.html">
+<meta property="og:site_name" content="Commit Logs">
+<meta property="og:description" content="Pattern matching is one of the most used features in Scala. Imagine yourself in a situation where you need to write a series of if-else-if statements to analyze the arguments of a certain function. It">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2016-09-26T04:24:09.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Scala Pattern Matching">
+<meta name="twitter:description" content="Pattern matching is one of the most used features in Scala. Imagine yourself in a situation where you need to write a series of if-else-if statements to analyze the arguments of a certain function. It">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 'undefined',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://www.commitlogs.com/2016/09/24/scala-pattern-matching/"/>
+
+
+
+
+
+<link rel="canonical" href=" { { site.url } }{ { page.url } }" />
+<script type="text/javascript">
+    var host = "commitlogs.com";
+    if ((host == window.location.host) && (window.location.protocol != "https:"))
+        window.location.protocol = "https";
+</script>
+
+
+<meta content='@_LeiG' name='twitter:site'/>
+<meta content='@_LeiG' name='twitter:creator'/>
+<meta property="og:image" content="/favicon.ico" />
+
+
+  <title> Scala Pattern Matching | Commit Logs </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-83286843-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Commit Logs</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <h1 class="site-subtitle" itemprop="description">Lei Gong</h1>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/About" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://www.commitlogs.com/2016/09/24/scala-pattern-matching/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Lei Gong">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/favicon.ico">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Commit Logs">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Commit Logs" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                Scala Pattern Matching
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-09-24T10:14:12-07:00">
+                2016-09-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/09/24/scala-pattern-matching/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/09/24/scala-pattern-matching/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Pattern matching is one of the most used features in Scala. Imagine yourself in a situation where you need to write a series of <code>if-else-if</code> statements to analyze the arguments of a certain function. It sometimes just a bit annoying to have those extra space/parentheses and you may hope to have something more elegent. Well, pattern matching is here for the rescue (some smarty pants may think of hash map, more on this later). It is like those <code>switch</code> statement in C/C++/Java, but better and more powerful.</p>
+<p>A pattern match includes a sequence of alternatives, each includes a <strong>pattern</strong> defined by the keyword <code>case</code> and one or more <strong>expressions</strong> that will be evaluated if the pattern matches. In this post, we will see some of its use cases and best practices.</p>
+<h2 id="Simple-pattern-matching"><a href="#Simple-pattern-matching" class="headerlink" title="Simple pattern matching"></a>Simple pattern matching</h2><p>Simple pattern matching is very similiar to the common use cases of the <code>switch</code> statements in other language, i.e. each pattern is of the same type. A toy function that takes an integer and outputs its corresponding month in string format may look like this.</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">intToMonth</span></span>(i: <span class="type">Int</span>): <span class="type">String</span> = i <span class="keyword">match</span> &#123;</span><br><span class="line">  <span class="keyword">case</span> <span class="number">1</span> =&gt; <span class="string">"Jan"</span></span><br><span class="line">  <span class="keyword">case</span> <span class="number">2</span> =&gt; <span class="string">"Feb"</span></span><br><span class="line">  <span class="keyword">case</span> <span class="number">3</span> =&gt; <span class="string">"Mar"</span></span><br><span class="line">  <span class="keyword">case</span> <span class="number">4</span> =&gt; <span class="string">"Apr"</span></span><br><span class="line">  <span class="keyword">case</span> <span class="number">5</span> =&gt; <span class="string">"May"</span></span><br><span class="line">  <span class="keyword">case</span> <span class="number">6</span> =&gt; <span class="string">"Jun"</span></span><br><span class="line">  <span class="keyword">case</span> <span class="number">7</span> =&gt; <span class="string">"Jul"</span></span><br><span class="line">  <span class="keyword">case</span> <span class="number">8</span> =&gt; <span class="string">"Aug"</span></span><br><span class="line">  <span class="keyword">case</span> <span class="number">9</span> =&gt; <span class="string">"Sep"</span></span><br><span class="line">  <span class="keyword">case</span> <span class="number">10</span> =&gt; <span class="string">"Oct"</span></span><br><span class="line">  <span class="keyword">case</span> <span class="number">11</span> =&gt; <span class="string">"Nov"</span></span><br><span class="line">  <span class="keyword">case</span> <span class="number">12</span> =&gt; <span class="string">"Dec"</span></span><br><span class="line">  <span class="keyword">case</span> _ =&gt; <span class="keyword">throw</span> <span class="keyword">new</span> <span class="type">Error</span>(<span class="string">"Invalid Month"</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">intToMonth(<span class="number">3</span>)</span><br><span class="line"><span class="comment">// res0: String = Mar</span></span><br><span class="line"></span><br><span class="line">intToMonth(<span class="number">13</span>)</span><br><span class="line"><span class="comment">// java.lang.Error: Invalid Month</span></span><br></pre></td></tr></table></figure>
+<p>This toy example should be quite straigtforward. Note that the <code>case _</code> is the catch-all expression. Depending on specific use cases, you may choose to handle the un-matched patterns differently. If you don’t specify this catch-all expression, a generic <code>MatchError</code> is thrown, which is not recommended.</p>
+<p>Pattern matching in Scala is less error-prone than the <code>switch</code> statement in C/C++, since it doesn’t suffer from the “fall-through” problem, i.e. an explicit break at the end of each branch is required to prevent falling through to the next branch.</p>
+<p>Another common use case is to parse options of an application. The returned type is <code>Unit</code> since each expression calls another function that is used for its side effect, i.e. display some message at the command line.</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">parseOption</span></span>(opt: <span class="type">String</span>): <span class="type">Unit</span> = opt <span class="keyword">match</span> &#123;</span><br><span class="line">  <span class="keyword">case</span> <span class="string">"-h"</span> | <span class="string">"--help"</span> =&gt; displayHelp</span><br><span class="line">  <span class="keyword">case</span> <span class="string">"-v"</span> | <span class="string">"--version"</span> =&gt; displayVersion</span><br><span class="line">  <span class="keyword">case</span> invalidOption =&gt; displayInvalidOption(invalidOption)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Note that, when you need to use the catch-all value in expression, you can’t access it with the wildcard syntax <code>_</code>. Instead, you would need to assign a variable name to this default value.</p>
+<h3 id="Match-patterns-of-integers"><a href="#Match-patterns-of-integers" class="headerlink" title="Match patterns of integers"></a>Match patterns of integers</h3><p>Let’s take another look at our <code>intToMonth</code> example. For a simple match expression like this, there is a particular optimization technique available. Scala provides the <code>@switch</code> annotation that compiles the pattern matching into a <code>tableswitch</code> or <code>lookupswitch</code>, which is better for performance. In these scenarios, a value can jump directly to the result rather walking through a decision tree when this optimization is not available.</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">intToMonth</span></span>(i: <span class="type">Int</span>): <span class="type">String</span> = (i: <span class="meta">@switch</span>) <span class="keyword">match</span> &#123;</span><br><span class="line">  <span class="keyword">case</span> <span class="number">1</span> =&gt; <span class="string">"Jan"</span></span><br><span class="line">  <span class="keyword">case</span> <span class="number">2</span> =&gt; <span class="string">"Feb"</span></span><br><span class="line">  <span class="keyword">case</span> <span class="number">3</span> =&gt; <span class="string">"Mar"</span></span><br><span class="line">  <span class="keyword">case</span> <span class="number">4</span> =&gt; <span class="string">"Apr"</span></span><br><span class="line">  <span class="keyword">case</span> <span class="number">5</span> =&gt; <span class="string">"May"</span></span><br><span class="line">  <span class="keyword">case</span> <span class="number">6</span> =&gt; <span class="string">"Jun"</span></span><br><span class="line">  <span class="keyword">case</span> <span class="number">7</span> =&gt; <span class="string">"Jul"</span></span><br><span class="line">  <span class="keyword">case</span> <span class="number">8</span> =&gt; <span class="string">"Aug"</span></span><br><span class="line">  <span class="keyword">case</span> <span class="number">9</span> =&gt; <span class="string">"Sep"</span></span><br><span class="line">  <span class="keyword">case</span> <span class="number">10</span> =&gt; <span class="string">"Oct"</span></span><br><span class="line">  <span class="keyword">case</span> <span class="number">11</span> =&gt; <span class="string">"Nov"</span></span><br><span class="line">  <span class="keyword">case</span> <span class="number">12</span> =&gt; <span class="string">"Dec"</span></span><br><span class="line">  <span class="keyword">case</span> _ =&gt; <span class="keyword">throw</span> <span class="keyword">new</span> <span class="type">Error</span>(<span class="string">"Invalid Month"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>To use this optimization, a few conditions have to be met as stated <a href="http://alvinalexander.com/scala/using-match-expression-like-switch-statement" target="_blank" rel="noopener">here</a>.</p>
+<ol>
+<li>The matched value must be a known integer.</li>
+<li>The matched expression must be “simple”. It can’t contain any type checks, if statements, or extractors.</li>
+<li>The expression must also have its value available at comile time.</li>
+<li>There should be more than two case statements.</li>
+</ol>
+<p><strong>Hash map</strong></p>
+<p>To achieve a similar level of optimization for a single typed pattern, you don’t actually have to use pattern matching. In most cases, a hash map would do the trick.</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> intToMonthMap: <span class="type">Map</span>[<span class="type">Int</span>, <span class="type">String</span>] = <span class="type">Map</span>(</span><br><span class="line">  <span class="number">1</span> -&gt; <span class="string">"Jan"</span>,</span><br><span class="line">  <span class="number">2</span> -&gt; <span class="string">"Feb"</span>,</span><br><span class="line">  <span class="number">3</span> -&gt; <span class="string">"Mar"</span>,</span><br><span class="line">  <span class="number">4</span> -&gt; <span class="string">"Apr"</span>,</span><br><span class="line">  <span class="number">5</span> -&gt; <span class="string">"May"</span>,</span><br><span class="line">  <span class="number">6</span> -&gt; <span class="string">"Jun"</span>,</span><br><span class="line">  <span class="number">7</span> -&gt; <span class="string">"Jul"</span>,</span><br><span class="line">  <span class="number">8</span> -&gt; <span class="string">"Aug"</span>,</span><br><span class="line">  <span class="number">9</span> -&gt; <span class="string">"Sep"</span>,</span><br><span class="line">  <span class="number">10</span> -&gt; <span class="string">"Oct"</span>,</span><br><span class="line">  <span class="number">11</span> -&gt; <span class="string">"Nov"</span>,</span><br><span class="line">  <span class="number">12</span> -&gt; <span class="string">"Dec"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">intToMonthMap(<span class="number">3</span>)</span><br><span class="line"><span class="comment">// res0: String = Mar</span></span><br></pre></td></tr></table></figure>
+<p>Of course, hash map has its own limitations and some over-head around maintaining another variable. That’s why pattern matching is generally more powerful as you will see from the next few sections.</p>
+<h3 id="Match-patterns-of-sequences"><a href="#Match-patterns-of-sequences" class="headerlink" title="Match patterns of sequences"></a>Match patterns of sequences</h3><p>In a slightly more complicated scenario, you may also want to match against sequences, such as <code>List</code> or <code>Array</code>. I say they are more complicated, since there are two-dimensions to be matched, i.e. the value and the length of the sequence. Let’s look at this toy example to match patterns for a list of integers.</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">matchList</span></span>(list: <span class="type">List</span>[<span class="type">Int</span>]): <span class="type">Unit</span> = list <span class="keyword">match</span> &#123;</span><br><span class="line">  <span class="keyword">case</span> <span class="type">List</span>(<span class="number">1</span>, _, _) =&gt; println(<span class="string">"A list with three integers and starts with 1"</span>)</span><br><span class="line">  <span class="keyword">case</span> <span class="type">List</span>(<span class="number">1</span>, _) =&gt; println(<span class="string">"A list with two integers and starts with 1"</span>)</span><br><span class="line">  <span class="keyword">case</span> <span class="type">List</span>(<span class="number">1</span>, _*) =&gt; println(<span class="string">"A list starts with 1 and has any number of integers"</span>)</span><br><span class="line">  <span class="keyword">case</span> _ =&gt; println(<span class="string">"None of the above"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>The wildcards are pretty powerful. Here, we use <code>_</code> to stand for each element in a sequence and <code>_*</code> for zero or more elements. Note that, in the above example, <code>case List(1, _*)</code> should match all lists starting with one and having any number of integers by its own, but, combined with other patterns, it actually matches all lists starting with one and having more than three elements of integers.</p>
+<h2 id="Match-typed-patterns"><a href="#Match-typed-patterns" class="headerlink" title="Match typed patterns"></a>Match typed patterns</h2><p>Besides the simple use cases, pattern matching can be used to handle typed patterns. That is, you could use it to detect the type of the input before you could deal with each type correctly.</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">stringifyInput</span></span>(x: <span class="type">Any</span>): <span class="type">String</span> = x <span class="keyword">match</span> &#123;</span><br><span class="line">  <span class="keyword">case</span> i: <span class="type">Int</span> =&gt; <span class="string">s"Input Integer: <span class="subst">$i</span>"</span></span><br><span class="line">  <span class="keyword">case</span> d: <span class="type">Double</span> =&gt; <span class="string">s"Inpit Double: <span class="subst">$d</span>"</span></span><br><span class="line">  <span class="keyword">case</span> s: <span class="type">String</span> =&gt; <span class="string">s"Input String: <span class="subst">$s</span>"</span></span><br><span class="line">  <span class="keyword">case</span> ai: <span class="type">Array</span>[<span class="type">Int</span>] =&gt; <span class="string">s"Input Array of Int: <span class="subst">$&#123;ai.mkString(",")&#125;</span>"</span></span><br><span class="line">  <span class="keyword">case</span> as: <span class="type">Array</span>[<span class="type">String</span>] =&gt; <span class="string">s"Input Array of String: <span class="subst">$&#123;as.mkString(",")&#125;</span>"</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">stringifyInput(<span class="number">3</span>)</span><br><span class="line"><span class="comment">// res0: String = Input Integer: 3</span></span><br><span class="line"></span><br><span class="line">stringifyInput(<span class="number">3.0</span>)</span><br><span class="line"><span class="comment">// res1: String = Input Double: 3.0</span></span><br><span class="line"></span><br><span class="line">stringifyInput(<span class="string">"s"</span>)</span><br><span class="line"><span class="comment">// res2: String = Input String: s</span></span><br><span class="line"></span><br><span class="line">stringifyInput(<span class="type">Array</span>(<span class="number">2</span>, <span class="number">3</span>))</span><br><span class="line"><span class="comment">// res3: String = Input Array of Int: 2,3</span></span><br><span class="line"></span><br><span class="line">stringifyInput(<span class="type">Array</span>(<span class="string">"s"</span>, <span class="string">"t"</span>))</span><br><span class="line"><span class="comment">// res4: String = Input Array of String: s,t</span></span><br></pre></td></tr></table></figure>
+<p>This code pattern is used to replace a <code>if-isInstanceOf</code> combination and is useful to walk through a structure using the composite design pattern.</p>
+<p>Note that, since the pattern match occurs at runtime and generic types are erased in the JVM, one cannot make a type match for a specific Map type.</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">case</span> m: <span class="type">Map</span>[<span class="type">String</span>, <span class="type">Int</span>] =&gt; ... <span class="comment">// this dosen't work</span></span><br></pre></td></tr></table></figure>
+<h2 id="Match-case-class"><a href="#Match-case-class" class="headerlink" title="Match case class"></a>Match case class</h2><p>More generally, we can use <code>case class</code> in pattern matching for complex data structures. I find this to be one of the most common use cases of pattern matching in reality, although its syntax is quite similar to what we have already seen.</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">case</span> <span class="class"><span class="keyword">class</span> <span class="title">Person</span>(<span class="params">name: <span class="type">String</span>, age: <span class="type">Int</span>, isMarried: <span class="type">Boolean</span></span>)</span></span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class"><span class="title">def</span> <span class="title">matchMarriageStatus</span>(<span class="params">p: <span class="type">Person</span></span>)</span>: <span class="type">Unit</span> = p <span class="keyword">match</span> &#123;</span><br><span class="line">  <span class="keyword">case</span> <span class="type">Person</span>(name, age, <span class="literal">true</span>) =&gt; println(name + <span class="string">" age "</span> + age.toString + <span class="string">" is married."</span>)</span><br><span class="line">  <span class="keyword">case</span> <span class="type">Person</span>(name, age, <span class="literal">false</span>) =&gt; println(name + <span class="string">" age "</span> + age.toString + <span class="string">" is not married."</span>)</span><br><span class="line">  <span class="keyword">case</span> _ =&gt; println(<span class="string">"Unknown Marriage Status."</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">matchMarriageStatus(<span class="type">Person</span>(<span class="string">"Tom"</span>, <span class="number">32</span>, <span class="literal">true</span>))</span><br><span class="line"><span class="comment">// Tom age 32 is married.</span></span><br><span class="line"></span><br><span class="line">matchMarriageStatus(<span class="type">Person</span>(<span class="string">"James"</span>, <span class="number">22</span>, <span class="literal">true</span>))</span><br><span class="line"><span class="comment">// James age 22 is not married.</span></span><br></pre></td></tr></table></figure>
+<p>You can get more advanced with <code>case class</code> and <code>case object</code> for pattern matching. For example, just like what we do with matching typed patterns, some <code>case class</code> may extend a common <code>abstrac class</code> and you can easily handle each of them by its specific logic.</p>
+<h2 id="Add-guards-to-case-statements"><a href="#Add-guards-to-case-statements" class="headerlink" title="Add guards to case statements"></a>Add guards to case statements</h2><p>Additional qualifying logic can also be easily added to the case statement via <code>if</code> expressions. For an arbitrary example, if you only want to stringify numeric values fall in between some ranges.</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">stringifyInputWithConditions</span></span>(x: <span class="type">Any</span>): <span class="type">String</span> = x <span class="keyword">match</span> &#123;</span><br><span class="line">  <span class="keyword">case</span> i: <span class="type">Int</span> <span class="keyword">if</span> <span class="number">0</span> to <span class="number">10</span> contains i =&gt; <span class="string">s"Input Integer: <span class="subst">$i</span>"</span></span><br><span class="line">  <span class="keyword">case</span> d: <span class="type">Double</span> <span class="keyword">if</span> <span class="number">5</span> to <span class="number">10</span> contains d =&gt; <span class="string">s"Inpit Double: <span class="subst">$d</span>"</span></span><br><span class="line">  <span class="keyword">case</span> l: <span class="type">Long</span> <span class="keyword">if</span> l == <span class="number">10</span>L =&gt; <span class="string">s"Input Long: <span class="subst">$l</span>"</span></span><br><span class="line">  <span class="keyword">case</span> _ =&gt; <span class="string">s"Invalid Input"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>These conditions in guards, i.e. the <code>if</code> expressions, can be fields extracted from a <code>case class</code>, which turns out to be a very handy feature in practice.</p>
+<h2 id="Ending"><a href="#Ending" class="headerlink" title="Ending"></a>Ending</h2><p>In this post, we went through some common use cases of pattern matching. Hopefully you are convinced, or at least start to think, that pattern matching is a quite powerful feature in Scala. And, because of that, I can’t possibly cover all of its use cases here. More importantly, you will definitely find it to be widely used in many projects. It helps to make complex logic written in a concise and readable syntax.</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/scala/" rel="tag"># scala</a>
+          
+            <a href="/tags/functional-programming/" rel="tag"># functional programming</a>
+          
+            <a href="/tags/pattern-matching/" rel="tag"># pattern matching</a>
+          
+            <a href="/tags/case-class/" rel="tag"># case class</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/09/17/scala-option-some-and-none/" rel="next" title="Scala Option, Some and None">
+                <i class="fa fa-chevron-left"></i> Scala Option, Some and None
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/10/01/scala-trait-and-abstract-class/" rel="prev" title="Scala Trait and Abstract Class">
+                Scala Trait and Abstract Class <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- Go to www.addthis.com/dashboard to customize your tools -->
+<div class="addthis_inline_share_toolbox">
+  <script type = "text/javascript" src = "//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-57cc6969fe948040" async = "async" ></script>
+</div>
+
+      
+    </div>
+
+    <!-- Begin MailChimp Signup Form -->
+<link href="//cdn-images.mailchimp.com/embedcode/slim-10_7.css" rel="stylesheet" type="text/css">
+<style type="text/css">
+  #mc_embed_signup{background:#fff; clear:left; font-size:13px; font-style:sans-serif; }
+  #mc_embed_signup #mce-EMAIL{width: 100%; font-size:13px;}
+  #mc_embed_signup #mc-embedded-subscribe{float: right; font-size:13px; width: 80px;}
+  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+  We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+</style>
+<div id="mc_embed_signup">
+  <form action="//commitlogs.us14.list-manage.com/subscribe/post?u=6313029766166dc051a2e8268&amp;id=681c5b979d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+    <div id="mc_embed_signup_scroll">
+      <label style="color: #666666; font-size: 13px;">JOIN A COMMUNITY FOR MAKERS.</label>
+      <input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="Enter your email..." required>
+      <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+      <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_6313029766166dc051a2e8268_681c5b979d" tabindex="-1" value=""></div>
+      <div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+    </div>
+  </form>
+ </div>
+ <!--End mc_embed_signup-->
+
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/favicon.ico"
+               alt="Lei Gong" />
+          <p class="site-author-name" itemprop="name">Lei Gong</p>
+          <p class="site-description motion-element" itemprop="description">It is not just about software development and craftsmanship.</p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">26</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">78</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/_LeiG" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.github.com/LeiG" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.linkedin.com/in/imleigong" target="_blank" title="LinkedIn">
+                  
+                    <i class="fa fa-fw fa-linkedin"></i>
+                  
+                  LinkedIn
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:lei@commitlogs.com" target="_blank" title="Contact">
+                  
+                    <i class="fa fa-fw fa-envelope"></i>
+                  
+                  Contact
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Simple-pattern-matching"><span class="nav-number">1.</span> <span class="nav-text"><a href="#Simple-pattern-matching" class="headerlink" title="Simple pattern matching"></a>Simple pattern matching</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Match-patterns-of-integers"><span class="nav-number">1.1.</span> <span class="nav-text"><a href="#Match-patterns-of-integers" class="headerlink" title="Match patterns of integers"></a>Match patterns of integers</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Match-patterns-of-sequences"><span class="nav-number">1.2.</span> <span class="nav-text"><a href="#Match-patterns-of-sequences" class="headerlink" title="Match patterns of sequences"></a>Match patterns of sequences</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Match-typed-patterns"><span class="nav-number">2.</span> <span class="nav-text"><a href="#Match-typed-patterns" class="headerlink" title="Match typed patterns"></a>Match typed patterns</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Match-case-class"><span class="nav-number">3.</span> <span class="nav-text"><a href="#Match-case-class" class="headerlink" title="Match case class"></a>Match case class</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Add-guards-to-case-statements"><span class="nav-number">4.</span> <span class="nav-text"><a href="#Add-guards-to-case-statements" class="headerlink" title="Add guards to case statements"></a>Add guards to case statements</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Ending"><span class="nav-number">5.</span> <span class="nav-text"><a href="#Ending" class="headerlink" title="Ending"></a>Ending</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lei Gong</span>
+</div>
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'lei-gong';
+      var disqus_identifier = '2016/09/24/scala-pattern-matching/';
+
+      var disqus_title = "Scala Pattern Matching";
+
+
+      function run_disqus_script(disqus_script) {
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+
+      
+        var disqus_config = function () {
+            this.page.url = disqus_url;
+            this.page.identifier = disqus_identifier;
+            this.page.title = disqus_title;
+        };
+        run_disqus_script('embed.js');
+      
+
+    </script>
+  
+
+
+
+
+
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+  
+
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
